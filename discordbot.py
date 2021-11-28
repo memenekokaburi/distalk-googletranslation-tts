@@ -16,6 +16,7 @@ prefix = os.getenv('DISCORD_BOT_PREFIX', default='🦑')
 lang = os.getenv('DISCORD_BOT_LANG', default='ja')
 token = os.environ['DISCORD_BOT_TOKEN']
 talk_api = os.environ['TALK_API']
+bitly_token = os.environ['BITLY_TOKEN']
 
 client = commands.Bot(command_prefix=prefix)
 with open('emoji_ja.json', encoding='utf-8') as file:
@@ -199,5 +200,16 @@ async def talk(ctx, *args):
     except:
         print(response.json())
         await ctx.send("ごめんなさい。もう一度教えて下さい。")
+
+@client.command()
+async def url(ctx, *args):
+    url = 'https://api-ssl.bitly.com/v3/shorten'
+    access_token = bitly_token
+    query = {
+            'access_token': access_token,
+            'longurl':args
+            }
+    r = requests.get(url,params=query).json()['data']['url']
+    await ctx.send("短縮したよ！"+"\n"+r)
 
 client.run(token)
