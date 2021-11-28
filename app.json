@@ -29,14 +29,6 @@
     "BITLY_TOKEN": {
             "description": "bitlytoken",
             "required": false
-    },
-    "TEXT_CHANNEL": {
-            "description": "通知を送るテキストチャンネルID",
-            "required": false
-    },
-    "VOICE_CAHNNEL": {
-            "description": "入退出を監視するボイスチャンネルID",
-            "required": false
     }
   }
 }
