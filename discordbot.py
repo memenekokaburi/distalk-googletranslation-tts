@@ -170,4 +170,16 @@ async def ヘルプ(ctx):
 {prefix}切断：ボイスチャンネルから切断します。'''
     await ctx.send(message)
 
+#wiki
+@client.command()
+async def wiki(ctx, *args):
+    print("received message: " + str(args))
+    if client.user != ctx.message.author:
+        try:
+            wikipedia.set_lang("ja")
+            text=wikipedia.summary(args, auto_suggest=False)
+            await ctx.send(text)
+        except:
+            await ctx.send("検索エラー！")
+
 client.run(token)
