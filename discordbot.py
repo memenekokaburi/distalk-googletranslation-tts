@@ -11,12 +11,15 @@ import wikipedia
 import pya3rt #A3RTのTalk APIを使用
 import requests
 import sys #終了時に使用
+import datetime
 
-prefix = os.getenv('DISCORD_BOT_PREFIX', default='🦑')
+prefix = os.getenv('DISCORD_BOT_PREFIX', default='!')
 lang = os.getenv('DISCORD_BOT_LANG', default='ja')
 token = os.environ['DISCORD_BOT_TOKEN']
 talk_api = os.environ['TALK_API']
 bitly_token = os.environ['BITLY_TOKEN']
+text_channel = os.environ['TEXT_CHANNEL']
+voice_channel = os.environ['VOICE_CAHNNEL']
 
 client = commands.Bot(command_prefix=prefix)
 with open('emoji_ja.json', encoding='utf-8') as file:
@@ -211,5 +214,44 @@ async def url(ctx, *args):
             }
     r = requests.get(url,params=query).json()['data']['url']
     await ctx.send("短縮したよ！"+"\n"+r)
+
+# チャンネル入退室時の通知処理
+@client.event
+async def on_voice_state_update(member, before, after):
+    # チャンネルへの入室ステータスが変更されたとき（ミュートON、OFFに反応しないように分岐）
+    if before.channel != after.channel:
+        # 通知メッセージを書き込むテキストチャンネル（チャンネルIDを指定）
+        botRoom = client.get_channel(text_channel)
+ 
+        # 入退室を監視する対象のボイスチャンネル（チャンネルIDを指定）
+        announceChannelIds = [voice_channel]
+
+        #時刻取得
+        time_now_utc = datetime.datetime.utcnow() # UTC (協定世界時) の時刻を取得
+
+        time_dt_ja = datetime.timedelta(hours=9) # UTC より、日本は 9時間進んでいる
+
+        time_now_ja = time_now_utc + time_dt_ja # UTC に 9時間足してやれば、日本時間になる
+        
+        #時間だけ取得
+        now = ""
+        ok = False
+        cnt = 0
+        for i in str(time_now_ja):#文字列処理
+            if i==" ":
+                ok = True
+            if ok:
+                if i==":":
+                    cnt+=1
+                if cnt==2:
+                    break
+                now+=i
+                
+        # 退室通知
+        if before.channel is not None and before.channel.id in announceChannelIds:
+            await botRoom.send("**" + before.channel.name + "** から、__" + member.name + "__  が退室 ("+now+")")
+        # 入室通知
+        if after.channel is not None and after.channel.id in announceChannelIds:
+            await botRoom.send("**" + after.channel.name + "** に、__" + member.name + "__  が入室 ("+now+")")
 
 client.run(token)
