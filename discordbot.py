@@ -18,8 +18,8 @@ lang = os.getenv('DISCORD_BOT_LANG', default='ja')
 token = os.environ['DISCORD_BOT_TOKEN']
 talk_api = os.environ['TALK_API']
 bitly_token = os.environ['BITLY_TOKEN']
-text_channel = os.environ['TEXT_CHANNEL']
-voice_channel = os.environ['VOICE_CAHNNEL']
+# text_channel = os.environ['TEXT_CHANNEL']
+# voice_channel = os.environ['VOICE_CAHNNEL']
 
 client = commands.Bot(command_prefix=prefix)
 with open('emoji_ja.json', encoding='utf-8') as file:
