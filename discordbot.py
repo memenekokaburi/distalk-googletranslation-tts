@@ -7,6 +7,7 @@ import urllib.parse
 import re
 import emoji
 import json
+import wikipedia
 
 prefix = os.getenv('DISCORD_BOT_PREFIX', default='🦑')
 lang = os.getenv('DISCORD_BOT_LANG', default='ja')
