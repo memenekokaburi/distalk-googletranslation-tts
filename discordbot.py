@@ -152,15 +152,6 @@ async def on_voice_state_update(member, before, after):
                 if cnt==2:
                     break
                 now+=i
-                
-        # 退室通知
-        if before.channel is not None and before.channel.id in announceChannelIds:
-            await botRoom.send("**" + before.channel.name + "** から、__" + member.name + "__  が退室 ("+now+")")
-        # 入室通知
-        if after.channel is not None and after.channel.id in announceChannelIds:
-            await botRoom.send("**" + after.channel.name + "** に、__" + member.name + "__  が入室 ("+now+")")
-
-
 
     if before.channel is None:
         if member.id == client.user.id:
@@ -172,6 +163,9 @@ async def on_voice_state_update(member, before, after):
                 await after.channel.connect()
             else:
                 if member.guild.voice_client.channel is after.channel:
+                     # 入室通知
+                    if after.channel is not None and after.channel.id in announceChannelIds:
+                        await botRoom.send("**" + after.channel.name + "** に、__" + member.name + "__  が入室 ("+now+")")
                     text = member.name + 'さんが入室しました'
                     s_quote = urllib.parse.quote(text)
                     mp3url = f'http://translate.google.com/translate_tts?ie=UTF-8&q={s_quote}&tl={lang}&client=tw-ob'
@@ -189,6 +183,9 @@ async def on_voice_state_update(member, before, after):
                         await asyncio.sleep(0.5)
                         await member.guild.voice_client.disconnect()
                     else:
+                         # 退室通知
+                        if before.channel is not None and before.channel.id in announceChannelIds:
+                            await botRoom.send("**" + before.channel.name + "** から、__" + member.name + "__  が退室 ("+now+")")
                         text = member.name + 'さんが退室しました'
                         s_quote = urllib.parse.quote(text)
                         mp3url = f'http://translate.google.com/translate_tts?ie=UTF-8&q={s_quote}&tl={lang}&client=tw-ob'
