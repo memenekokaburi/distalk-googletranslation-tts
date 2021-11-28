@@ -66,6 +66,8 @@ async def 切断(ctx):
 
 @client.event
 async def on_message(message):
+    if message.author == client.user:
+        return
     if message.content.startswith(prefix):
         pass
     else:
