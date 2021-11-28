@@ -8,10 +8,15 @@ import re
 import emoji
 import json
 import wikipedia
+import pya3rt #A3RTのTalk APIを使用
+import requests
+import sys #終了時に使用
 
 prefix = os.getenv('DISCORD_BOT_PREFIX', default='🦑')
 lang = os.getenv('DISCORD_BOT_LANG', default='ja')
 token = os.environ['DISCORD_BOT_TOKEN']
+talk_api = os.environ['TALK_API']
+
 client = commands.Bot(command_prefix=prefix)
 with open('emoji_ja.json', encoding='utf-8') as file:
     emoji_dataset = json.load(file)
@@ -182,5 +187,17 @@ async def wiki(ctx, *args):
             await ctx.send(text)
         except:
             await ctx.send("検索エラー！")
+
+#talkapi
+@client.command()
+async def talk(ctx, *args):
+    talk_url = "https://api.a3rt.recruit.co.jp/talk/v1/smalltalk"
+    payload = {"apikey": talk_api, "query": args}
+    response = requests.post(talk_url, data=payload)
+    try:
+        await ctx.send(response.json()["results"][0]["reply"])
+    except:
+        print(response.json())
+        await ctx.send("ごめんなさい。もう一度教えて下さい。")
 
 client.run(token)
