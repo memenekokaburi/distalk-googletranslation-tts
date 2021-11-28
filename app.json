@@ -19,7 +19,7 @@
             "description": "ボットのトークンを入力します。"
     },
     "DISCORD_BOT_PREFIX": {
-            "description": "ボットのプレフィックスを入力します。空欄にすると「🦑」に設定されます。",
+            "description": "ボットのプレフィックスを入力します。空欄にすると「!」に設定されます。",
             "required": false
     },
     "TALK_API": {
@@ -28,6 +28,14 @@
     },
     "BITLY_TOKEN": {
             "description": "bitlytoken",
+            "required": false
+    },
+    "TEXT_CHANNEL": {
+            "description": "通知を送るテキストチャンネルID",
+            "required": false
+    },
+    "VOICE_CAHNNEL": {
+            "description": "入退出を監視するボイスチャンネルID",
             "required": false
     }
   }
