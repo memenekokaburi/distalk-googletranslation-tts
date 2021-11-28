@@ -25,6 +25,10 @@
     "TALK_API": {
             "description": "talkapi",
             "required": false
+    },
+    "BITLY_TOKEN": {
+            "description": "bitlytoken",
+            "required": false
     }
   }
 }
