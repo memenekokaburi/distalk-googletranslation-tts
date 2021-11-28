@@ -21,6 +21,10 @@
     "DISCORD_BOT_PREFIX": {
             "description": "ボットのプレフィックスを入力します。空欄にすると「🦑」に設定されます。",
             "required": false
+    },
+    "TALK_API": {
+            "description": "talkapi",
+            "required": false
     }
   }
 }
