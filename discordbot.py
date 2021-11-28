@@ -66,7 +66,9 @@ async def 切断(ctx):
 
 @client.event
 async def on_message(message):
-    if message.content.startswith(prefix):
+    if client.user == ctx.message.author:
+        pass
+    elif message.content.startswith(prefix):
         pass
     else:
         if message.guild.voice_client:
@@ -100,7 +102,7 @@ async def on_message(message):
             text = re.sub(pattern, '、画像', text)
             pattern = r'https?://[\w/:%#\$&\?\(\)~\.=\+\-]+'
             text = re.sub(pattern, '、URL', text)
-            text = message.author.name + '、' + text
+            #text = message.author.name + '、' + text
             if text[-1:] == 'w' or text[-1:] == 'W' or text[-1:] == 'ｗ' or text[-1:] == 'W':
                 while text[-2:-1] == 'w' or text[-2:-1] == 'W' or text[-2:-1] == 'ｗ' or text[-2:-1] == 'W':
                     text = text[:-1]
@@ -124,35 +126,6 @@ async def on_message(message):
 
 @client.event
 async def on_voice_state_update(member, before, after):
-        # チャンネルへの入室ステータスが変更されたとき（ミュートON、OFFに反応しないように分岐）
-    if before.channel != after.channel:
-        # 通知メッセージを書き込むテキストチャンネル（チャンネルIDを指定）
-        botRoom = client.get_channel(text_channel)
- 
-        # 入退室を監視する対象のボイスチャンネル（チャンネルIDを指定）
-        announceChannelIds = [voice_channel]
-
-        #時刻取得
-        time_now_utc = datetime.datetime.utcnow() # UTC (協定世界時) の時刻を取得
-
-        time_dt_ja = datetime.timedelta(hours=9) # UTC より、日本は 9時間進んでいる
-
-        time_now_ja = time_now_utc + time_dt_ja # UTC に 9時間足してやれば、日本時間になる
-        
-        #時間だけ取得
-        now = ""
-        ok = False
-        cnt = 0
-        for i in str(time_now_ja):#文字列処理
-            if i==" ":
-                ok = True
-            if ok:
-                if i==":":
-                    cnt+=1
-                if cnt==2:
-                    break
-                now+=i
-
     if before.channel is None:
         if member.id == client.user.id:
             presence = f'{prefix}ヘルプ | {len(client.voice_clients)}/{len(client.guilds)}サーバー'
@@ -163,9 +136,6 @@ async def on_voice_state_update(member, before, after):
                 await after.channel.connect()
             else:
                 if member.guild.voice_client.channel is after.channel:
-                     # 入室通知
-                    if after.channel is not None and after.channel.id in announceChannelIds:
-                        await botRoom.send("**" + after.channel.name + "** に、__" + member.name + "__  が入室 ("+now+")")
                     text = member.name + 'さんが入室しました'
                     s_quote = urllib.parse.quote(text)
                     mp3url = f'http://translate.google.com/translate_tts?ie=UTF-8&q={s_quote}&tl={lang}&client=tw-ob'
@@ -183,9 +153,6 @@ async def on_voice_state_update(member, before, after):
                         await asyncio.sleep(0.5)
                         await member.guild.voice_client.disconnect()
                     else:
-                         # 退室通知
-                        if before.channel is not None and before.channel.id in announceChannelIds:
-                            await botRoom.send("**" + before.channel.name + "** から、__" + member.name + "__  が退室 ("+now+")")
                         text = member.name + 'さんが退室しました'
                         s_quote = urllib.parse.quote(text)
                         mp3url = f'http://translate.google.com/translate_tts?ie=UTF-8&q={s_quote}&tl={lang}&client=tw-ob'
